@@ -238,15 +238,6 @@ func (a *appScanner) Parse() (*spec.Swagger, error) {
 		return nil, err
 	}
 
-	// build models dictionary
-	if a.scanModels {
-		for _, modelsFile := range cp.Models {
-			if err := a.parseSchema(modelsFile); err != nil {
-				return nil, err
-			}
-		}
-	}
-
 	// build parameters dictionary
 	for _, paramsFile := range cp.Parameters {
 		if err := a.parseParameters(paramsFile); err != nil {
@@ -306,15 +297,6 @@ func (a *appScanner) processDiscovered() error {
 		keepGoing = len(a.discovered) > 0
 	}
 
-	return nil
-}
-
-func (a *appScanner) parseSchema(file *ast.File) error {
-	sp := newSchemaParser(a.prog)
-	if err := sp.Parse(file, a.definitions); err != nil {
-		return err
-	}
-	a.discovered = append(a.discovered, sp.postDecls...)
 	return nil
 }
 
